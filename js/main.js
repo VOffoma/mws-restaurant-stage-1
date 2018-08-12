@@ -11,20 +11,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
+  registerServiceWorker();
 });
+
+
+
+/**
+ * Register ServiceWorker
+ */
+registerServiceWorker = () => {
+  if(!navigator.serviceWorker) return;
+  navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('Registration worked'))
+    .catch((error) => console.log(error));
+}
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
+  DBHelper.fetchNeighborhoods()
+    .then((neighborhoods) => {
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
-    }
-  });
+    })
+    .catch(error => console.error(error));
 }
 
 /**
@@ -44,14 +55,12 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
+  DBHelper.fetchCuisines()
+    .then((cuisines) => {
       self.cuisines = cuisines;
       fillCuisinesHTML();
-    }
-  });
+    })
+    .catch(error => console.error(error));
 }
 
 /**
@@ -72,6 +81,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize leaflet map, called from HTML.
  */
 initMap = () => {
+  updateRestaurants();
   self.newMap = L.map('map', {
         center: [40.722216, -73.987501],
         zoom: 12,
@@ -85,8 +95,7 @@ initMap = () => {
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox.streets'
   }).addTo(newMap);
-
-  updateRestaurants();
+ 
 }
 /* window.initMap = () => {
   let loc = {
@@ -114,14 +123,13 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      resetRestaurants(restaurants);
-      fillRestaurantsHTML();
-    }
+  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood)
+  .then((restaurants) => {
+    resetRestaurants(restaurants);
+    fillRestaurantsHTML();
   })
+  .catch(error => console.error(error));
+
 }
 
 /**
