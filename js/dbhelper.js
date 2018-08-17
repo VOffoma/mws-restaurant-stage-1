@@ -140,7 +140,23 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    // return (`/img/${restaurant.photograph}`);
+    let image = restaurant.photograph;
+    // console.log(image.substring(0, image.lastIndexOf));
+    let imageName = `${image.substring(0, image.lastIndexOf('.'))}-400_medium.jpg`;
+    return (`/images/${imageName}`);
+  }
+
+  /**
+   * Restaurant image URL.
+   */
+  static getImageSourceSetAndSizes(restaurant) {
+    let image = restaurant.photograph;
+    let imageName = image.substring(0, image.lastIndexOf('.'));
+    let sourceSet = `/images/${imageName}-200_small.jpg 200w, /images/${imageName}-400_medium.jpg 400w, /images/${imageName}-800_large.jpg 800w`;
+    let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
+    return {sourceSet, sizes};
+    
   }
 
   /**
