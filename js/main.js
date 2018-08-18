@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
-  // registerServiceWorker();
+  registerServiceWorker();
 });
 
 
@@ -97,18 +97,7 @@ initMap = () => {
   }).addTo(newMap);
  
 }
-/* window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
-  updateRestaurants();
-} */
+
 
 /**
  * Update page and map for current restaurants.
@@ -136,17 +125,7 @@ updateRestaurants = () => {
  * Clear current restaurants, their HTML and remove their map markers.
  */
 resetRestaurants = (restaurants) => {
-  // Remove all restaurants
-  // self.restaurants = [];
-  // const ul = document.getElementById('restaurants-list');
-  // ul.innerHTML = '';
-
-  // // Remove all map markers
-  // if (self.markers) {
-  //   self.markers.forEach(marker => marker.remove());
-  // }
-  // self.markers = [];
-  // self.restaurants = restaurants;
+  
   self.restaurants = [];
   const div = document.getElementById('restaurants-list');
   div.innerHTML = '';
@@ -163,11 +142,6 @@ resetRestaurants = (restaurants) => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
-  // const ul = document.getElementById('restaurants-list');
-  // restaurants.forEach(restaurant => {
-  //   ul.append(createRestaurantHTML(restaurant));
-  // });
-  // addMarkersToMap();
   const div = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     div.append(createRestaurantHTML(restaurant));
@@ -248,14 +222,5 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 
 } 
-/* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
+
 
