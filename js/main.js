@@ -184,35 +184,38 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.alt = '';
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  // const {sourceSet, sizes, src} = getImageSourceSetAndSizes(restaurant);
-  // image.srcset = sourceSet;
-  // image.sizes = sizes;
-  // image.src = src;
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const {sourceSet, sizes, src} = getImageSourceSetAndSizes(restaurant);
+  image.srcset = sourceSet;
+  image.sizes = sizes;
+  image.src = src;
   
-  article.append(image);
+  const imageDiv = document.createElement('div');
+  imageDiv.append(image)
+  article.append(imageDiv);
 
-  const details = document.createElement('div');
+  const detailsDiv = document.createElement('div');
+
   
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
-  details.append(name);
+  detailsDiv.append(name);
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  details.append(neighborhood);
+  detailsDiv.append(neighborhood);
 
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
-  details.append(address);
+  detailsDiv.append(address);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.setAttribute('aria-label', `View details for ${restaurant.name} restaurant`);
   more.href = DBHelper.urlForRestaurant(restaurant);
-  details.append(more)
+  detailsDiv.append(more)
 
-  article.append(details);
+  article.append(detailsDiv);
   return article;
 }
 
@@ -220,15 +223,15 @@ createRestaurantHTML = (restaurant) => {
  /**
    * get srcset and sizes for responsive images
    */
-  // getImageSourceSetAndSizes = (restaurant) => {
-  //   let image = restaurant.photograph;
-  //   let imageName = image.substring(0, image.lastIndexOf('.'));
-  //   let sourceSet = `/images/${imageName}-150_small.jpg 150w, /images/${imageName}-270_medium.jpg 270w, /images/${imageName}-540_large.jpg 540w`;
-  //   let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
-  //   let src = `/images/${imageName}-540_large.jpg`;
-  //   return {sourceSet, sizes, src};
+  getImageSourceSetAndSizes = (restaurant) => {
+    let image = restaurant.photograph;
+    let imageName = image.substring(0, image.lastIndexOf('.'));
+    let sourceSet = `/images/${imageName}-150_small.jpg 150w, /images/${imageName}-270_medium.jpg 270w, /images/${imageName}-540_large.jpg 540w`;
+    let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
+    let src = `/images/${imageName}-540_large.jpg`;
+    return {sourceSet, sizes, src};
     
-  // }
+  }
 
 /**
  * Add markers for current restaurants to the map.

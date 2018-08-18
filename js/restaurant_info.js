@@ -102,10 +102,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const image = document.getElementById('restaurant-img');
   image.alt = '';
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  // const {sourceSet, src} = getImageSourceSetAndSizes(restaurant);
-  // image.srcset = sourceSet;
-  // image.src = src;
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const {sourceSet, src} = getImageSourceSetAndSrc(restaurant);
+  image.srcset = sourceSet;
+  image.src = src;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -121,14 +121,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  /**
    * get srcset and sizes for responsive images
    */
-  // getImageSourceSetAndSizes = (restaurant) => {
-  //   let image = restaurant.photograph;
-  //   let imageName = image.substring(0, image.lastIndexOf('.'));
-  //   let sourceSet = `/images/${imageName}-270_medium.jpg , /images/${imageName}-540_large.jpg 2x`;
-  //   let src = `/images/${imageName}-540_large.jpg`;
-  //   return {sourceSet, src};
+  getImageSourceSetAndSrc = (restaurant) => {
+    let image = restaurant.photograph;
+    let imageName = image.substring(0, image.lastIndexOf('.'));
+    let sourceSet = `/images/${imageName}-270_medium.jpg , /images/${imageName}-540_large.jpg 2x`;
+    let src = `/images/${imageName}-540_large.jpg`;
+    return {sourceSet, src};
     
-  // }
+  }
  
 
 /**
