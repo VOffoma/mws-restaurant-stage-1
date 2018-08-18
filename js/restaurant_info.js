@@ -100,11 +100,12 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
+  image.alt = '';
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  const {sourceSet, sizes} = DBHelper.getImageSourceSetAndSizes(restaurant);
-  image.srcset = sourceSet;
-  image.sizes = sizes;
+  // const {sourceSet, src} = getImageSourceSetAndSizes(restaurant);
+  // image.srcset = sourceSet;
+  // image.src = src;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -116,6 +117,19 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   // fill reviews
   fillReviewsHTML();
 }
+
+ /**
+   * get srcset and sizes for responsive images
+   */
+  // getImageSourceSetAndSizes = (restaurant) => {
+  //   let image = restaurant.photograph;
+  //   let imageName = image.substring(0, image.lastIndexOf('.'));
+  //   let sourceSet = `/images/${imageName}-270_medium.jpg , /images/${imageName}-540_large.jpg 2x`;
+  //   let src = `/images/${imageName}-540_large.jpg`;
+  //   return {sourceSet, src};
+    
+  // }
+ 
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -142,7 +156,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
@@ -152,35 +166,40 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
-  const ul = document.getElementById('reviews-list');
+  // const ul = document.getElementById('reviews-list');
+  // reviews.forEach(review => {
+  //   ul.appendChild(createReviewHTML(review));
+  // });
+  // container.appendChild(ul);
+  const div = document.getElementById('reviews-list');
   reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+    div.appendChild(createReviewHTML(review));
   });
-  container.appendChild(ul);
+  container.appendChild(div);
 }
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-  const li = document.createElement('li');
+  const article = document.createElement('article');
   const name = document.createElement('p');
   name.innerHTML = review.name;
-  li.appendChild(name);
+  article.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
-  li.appendChild(date);
+  article.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  article.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
-  li.appendChild(comments);
+  article.appendChild(comments);
 
-  return li;
+  return article;
 }
 
 /**

@@ -137,9 +137,19 @@ updateRestaurants = () => {
  */
 resetRestaurants = (restaurants) => {
   // Remove all restaurants
+  // self.restaurants = [];
+  // const ul = document.getElementById('restaurants-list');
+  // ul.innerHTML = '';
+
+  // // Remove all map markers
+  // if (self.markers) {
+  //   self.markers.forEach(marker => marker.remove());
+  // }
+  // self.markers = [];
+  // self.restaurants = restaurants;
   self.restaurants = [];
-  const ul = document.getElementById('restaurants-list');
-  ul.innerHTML = '';
+  const div = document.getElementById('restaurants-list');
+  div.innerHTML = '';
 
   // Remove all map markers
   if (self.markers) {
@@ -153,9 +163,14 @@ resetRestaurants = (restaurants) => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
-  const ul = document.getElementById('restaurants-list');
+  // const ul = document.getElementById('restaurants-list');
+  // restaurants.forEach(restaurant => {
+  //   ul.append(createRestaurantHTML(restaurant));
+  // });
+  // addMarkersToMap();
+  const div = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
-    ul.append(createRestaurantHTML(restaurant));
+    div.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
 }
@@ -164,20 +179,22 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
-  const li = document.createElement('li');
+  const article = document.createElement('article');
 
   const image = document.createElement('img');
+  image.alt = '';
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  const {sourceSet, sizes} = DBHelper.getImageSourceSetAndSizes(restaurant);
-  image.srcset = sourceSet;
-  image.sizes = sizes;
+  // const {sourceSet, sizes, src} = getImageSourceSetAndSizes(restaurant);
+  // image.srcset = sourceSet;
+  // image.sizes = sizes;
+  // image.src = src;
   
-  li.append(image);
+  article.append(image);
 
   const details = document.createElement('div');
   
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   details.append(name);
 
@@ -191,12 +208,27 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
+  more.setAttribute('aria-label', `View details for ${restaurant.name} restaurant`);
   more.href = DBHelper.urlForRestaurant(restaurant);
   details.append(more)
 
-  li.append(details);
-  return li
+  article.append(details);
+  return article;
 }
+
+
+ /**
+   * get srcset and sizes for responsive images
+   */
+  // getImageSourceSetAndSizes = (restaurant) => {
+  //   let image = restaurant.photograph;
+  //   let imageName = image.substring(0, image.lastIndexOf('.'));
+  //   let sourceSet = `/images/${imageName}-150_small.jpg 150w, /images/${imageName}-270_medium.jpg 270w, /images/${imageName}-540_large.jpg 540w`;
+  //   let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
+  //   let src = `/images/${imageName}-540_large.jpg`;
+  //   return {sourceSet, sizes, src};
+    
+  // }
 
 /**
  * Add markers for current restaurants to the map.

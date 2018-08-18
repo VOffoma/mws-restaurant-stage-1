@@ -21,6 +21,10 @@ nav h1 {
     justify-content: center;
 }
 
+.offcontent{
+    display: none;
+}
+
 
 @media screen and (min-width: 320px) and (max-width: 445px) {
     .filter-options h2{
@@ -41,7 +45,7 @@ nav h1 {
     }
 
    /* style for restuarants list */
-   #restaurants-list li{
+   #restaurants-list li, #restaurants-list article{
         border: 0;
         border-bottom: 1px solid #ccc;
         font-family: Arial,sans-serif;
@@ -64,15 +68,15 @@ nav h1 {
         min-width: 0;
     }  
 
-    #restaurants-list li h1 {
+    #restaurants-list li h1, #restaurants-list article h1 {
         font-size: 12pt;
     }
 
-    #restaurants-list li p {
+    #restaurants-list li p, #restaurants-list article p{
         font-size: 10pt;
     }
 
-    #restaurants-list li a {
+    #restaurants-list li a, #restaurants-list article a{
         font-size: 8pt; 
         padding: 8px 15px 10px;
     }
@@ -81,7 +85,7 @@ nav h1 {
 
 
 @media screen and (min-width: 660px) and (max-width: 760px){
-    #restaurants-list li {
+    #restaurants-list li, #restaurants-list article {
         margin: 15px 5px;
         min-height: 380px;
         width: 240px;
@@ -93,7 +97,7 @@ nav h1 {
         width: calc((100% - 40px)/2);
         margin-right: 20px
     } 
-    #reviews-list li {
+    #reviews-list article {
         width:calc((100% - 160px)/2);
         margin: 0 10px 30px;
     }
@@ -119,6 +123,7 @@ nav h1 {
         order:2;
         width: 48%;
         border-bottom: 1px solid #d9d9d9;
+        border-top: 1px solid #fff;
       }
     
       .inside #map-container #map{
@@ -129,7 +134,7 @@ nav h1 {
        width: 100%;
     } 
 
-    #reviews-list li {
+    #reviews-list article {
         width:calc((100% - 200px)/3);
         margin: 0 10px 30px;
     } 
