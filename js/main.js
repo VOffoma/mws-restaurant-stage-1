@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
-  registerServiceWorker();
+  // registerServiceWorker();
 });
 
 
@@ -199,10 +199,9 @@ createRestaurantHTML = (restaurant) => {
    */
   getImageSourceSetAndSizes = (restaurant) => {
     let image = restaurant.photograph;
-    let imageName = image.substring(0, image.lastIndexOf('.'));
-    let sourceSet = `/images/${imageName}-150_small.jpg 150w, /images/${imageName}-270_medium.jpg 270w, /images/${imageName}-540_large.jpg 540w`;
+    let sourceSet = `/images/${image}-150_small.jpg 150w, /images/${image}-270_medium.jpg 270w, /images/${image}-540_large.jpg 540w`;
     let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
-    let src = `/images/${imageName}-540_large.jpg`;
+    let src = `/images/${image}-540_large.jpg`;
     return {sourceSet, sizes, src};
     
   }

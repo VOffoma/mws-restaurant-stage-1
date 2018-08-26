@@ -86,9 +86,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
    */
   getImageSourceSetAndSrc = (restaurant) => {
     let image = restaurant.photograph;
-    let imageName = image.substring(0, image.lastIndexOf('.'));
-    let sourceSet = `/images/${imageName}-270_medium.jpg , /images/${imageName}-540_large.jpg 2x`;
-    let src = `/images/${imageName}-540_large.jpg`;
+    let sourceSet = `/images/${image}-270_medium.jpg , /images/${image}-540_large.jpg 2x`;
+    let src = `/images/${image}-540_large.jpg`;
     return {sourceSet, src};
     
   }

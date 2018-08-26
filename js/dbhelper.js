@@ -4,12 +4,12 @@
 class DBHelper {
 
   /**
-   * Database URL.
-   * Change this to restaurants.json file location on your server.
+   * Server URL.
    */
-  static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+
+  static get SERVER_URL() {
+    const port = 1337; // Change this to your server port
+    return `http://localhost:${port}`;
   }
 
   /**
@@ -17,10 +17,9 @@ class DBHelper {
    */
   static async fetchRestaurants() {
     try{
-      const response = await fetch(DBHelper.DATABASE_URL);
+      const response = await fetch(`${DBHelper.SERVER_URL}/restaurants`);
       const jsonResponse = await response.json();
-      const restaurants = jsonResponse.restaurants;
-      return restaurants;
+      return jsonResponse;
     }
     catch(error) {
       const errorMessage = (`Request failed. Returned status of ${error.status}`);
