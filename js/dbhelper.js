@@ -22,8 +22,8 @@ class DBHelper {
       return jsonResponse;
     }
     catch(error) {
-      const errorMessage = (`Request failed. Returned status of ${error.status}`);
-      return errorMessage;
+        const errorMessage = (`Request failed. Returned status of ${error.status}`);
+        return errorMessage;
     }
   }
 

@@ -2,16 +2,19 @@ let restaurants,
   neighborhoods,
   cuisines
 var newMap
-var markers = []
+var markers = [];
+
+
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', async (event) => {
   initMap(); // added 
+  registerServiceWorker();
   fetchNeighborhoods();
   fetchCuisines();
-  // registerServiceWorker();
+  
 });
 
 
@@ -117,7 +120,7 @@ updateRestaurants = () => {
     resetRestaurants(restaurants);
     fillRestaurantsHTML();
   })
-  .catch(error => console.error(error));
+  .catch(error => console.log(error));
 
 }
 

@@ -1,3 +1,8 @@
+if (typeof idb === "undefined") {
+    self.importScripts('lib/idb.js');
+}
+
+
 const filesToCache = [
     './',
     './index.html',
@@ -45,7 +50,9 @@ self.addEventListener('activate', (event) => {
                 }
             })
             );
-        }).then(() => self.clients.claim())
+        })
+        .then(() => createDatabase())
+        .then(() => self.clients.claim())
     )
 });
 
@@ -57,23 +64,78 @@ self.addEventListener('fetch', (event) => {
     //       .catch(() => fetch(event.request))
     //      .then(response => addToCache(staticCacheName, event.request, response))
     // );
+  
+        // Use a network-first strategy
+        if(event.request.url == "http://localhost:1337/restaurants"){
+            event.respondWith(
+                fetch(event.request)
+                .then(async (response) => {
+                    const responseCopy = response.clone();
+                    const restaurants = await responseCopy.json();
+                    await addRestaurantsToIDB(restaurants);
+                    return response;
+                })
+                .catch(async () => {
+                    const restaurants = await fetchRestaurantsFromIDB();
+                    const blob = new Blob([JSON.stringify(restaurants, null, 2)], {type : 'application/json'});
+                    const init = { "status" : 200 , "statusText" : "success" };
+                    return new Response(blob, init);
 
-    // Use a network-first strategy
-    event.respondWith(
-        fetch(event.request)
-        .then(response => addToCache(dynamicCache, event.request, response))
-        .catch(() => fetchFromCache(event))
-      );
+                    //https://stackoverflow.com/questions/44037816/converting-a-json-object-into-a-response-object
+                })
+                .catch((error) => console.log(error))
+            );
+        }
+        else{
+            event.respondWith(
+                fetch(event.request)
+                .then(response => addToCache(dynamicCache, event.request, response))
+                .catch(() => fetchFromCache(event))
+            );
+        }
+   
 });
 
 
-function addToCache(cacheKey, request, response){
+const addToCache = (cacheKey, request, response) => {
       const responseCopy = response.clone();
       caches.open(cacheKey).then(cache => cache.put(request, responseCopy));
       return response;
 }
 
-function fetchFromCache(event){
+const fetchFromCache = (event) => {
     return caches.match(event.request).then(response => response); 
 }
+
+const createDatabase = () => {
+    idb.open('restaurant-data', 1, (upgradeDb) => {
+        const restaurantListStore = upgradeDb.createObjectStore('restaurantList', {
+            keyPath: 'id',
+        });
+        restaurantListStore.createIndex('id', 'id');
+    });
+}
+
+const addRestaurantsToIDB = async (restaurants) => {
+    let db = await idb.open('restaurant-data', 1);
+    const tx = db.transaction('restaurantList', 'readwrite');
+    const store = tx.objectStore('restaurantList');
+
+    for(let i in restaurants){
+        await store.put(restaurants[i]);
+    }
+    return tx.complete;
+}
+
+
+const fetchRestaurantsFromIDB = async () => {
+    let db = await idb.open('restaurant-data', 1);
+    const tx = db.transaction('restaurantList');
+    const store = tx.objectStore('restaurantList');
+
+    let restaurants = await store.getAll();
+    db.close();
+    return restaurants;
+}
+
 
