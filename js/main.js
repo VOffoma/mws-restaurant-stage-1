@@ -166,7 +166,7 @@ createRestaurantHTML = (restaurant) => {
   image.srcset = sourceSet;
   image.sizes = sizes;
   image.src = src;
-  
+
   const imageDiv = document.createElement('div');
   imageDiv.append(image)
   article.append(imageDiv);
