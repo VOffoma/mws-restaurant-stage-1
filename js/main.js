@@ -3,7 +3,7 @@ let restaurants,
   cuisines
 var newMap
 var markers = [];
-
+const repo = 'mws-restaurant-stage-1.github.io';
 
 
 /**
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
  */
 registerServiceWorker = () => {
   if(!navigator.serviceWorker) return;
-  navigator.serviceWorker.register('/sw.js')
+  navigator.serviceWorker.register(`/${repo}/sw.js`)
     .then(() => console.log('Registration worked'))
     .catch((error) => console.log(error));
 }
@@ -202,7 +202,7 @@ createRestaurantHTML = (restaurant) => {
    */
   getImageSourceSetAndSizes = (restaurant) => {
     let image = restaurant.photograph;
-    let sourceSet = `/images/${image}-150_small.jpg 150w, /images/${image}-270_medium.jpg 270w, /images/${image}-540_large.jpg 540w`;
+    let sourceSet = `/${repo}/images/${image}-150_small.jpg 150w, /images/${image}-270_medium.jpg 270w, /images/${image}-540_large.jpg 540w`;
     let sizes = "(max-width: 659px) 133px, (max-width: 760px) 240px,  (min-width: 760px) 270px";
     let src = `/images/${image}-540_large.jpg`;
     return {sourceSet, sizes, src};
