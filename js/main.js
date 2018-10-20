@@ -3,7 +3,7 @@ let restaurants,
   cuisines
 var newMap
 var markers = [];
-const repo = 'mws-restaurant-stage-1.github.io';
+
 
 
 /**
