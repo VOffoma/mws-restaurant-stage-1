@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', async (event) => {
  */
 registerServiceWorker = () => {
   if(!navigator.serviceWorker) return;
-  navigator.serviceWorker.register(`/${repo}/sw.js`)
+  //navigator.serviceWorker.register(`/${repo}/sw.js`)
+  navigator.serviceWorker.register(`sw.js`)
     .then(() => console.log('Registration worked'))
     .catch((error) => console.log(error));
 }
