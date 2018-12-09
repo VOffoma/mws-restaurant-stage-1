@@ -4,9 +4,57 @@ var newMap;
 /**
  * Initialize map as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {  
+document.addEventListener('DOMContentLoaded', async (event) => {  
   initMap();
+  fetchReviewsFromURL();
+  navigator.serviceWorker.getRegistration().then(function(registration) {
+  // navigator.serviceWorker.ready.then(function(registration) {
+    if(registration && ('sync' in registration)){
+      registration.sync.register('test');
+
+      const reviewForm = document.getElementById('reviewForm');
+      const nameField = document.getElementById('reviewer');
+      const commentField = document.getElementById('comment');
+      const ratingField = document.getElementById('rating'); 
+    
+      reviewForm.addEventListener('submit', function(event){
+        event.preventDefault();
+        const modal = document.getElementById('myModal');
+        const newReview = {
+          restaurant_id: getParameterByName('id'),
+          name: nameField.value,
+          comments: commentField.value,
+          rating: ratingField.value,
+        };
+
+      
+        console.log(newReview);
+        
+        restaurantStore.saveRecords('unSavedReviews', newReview).then(() => {
+          commentField.value = "";
+          nameField.value = "";
+          ratingField.value = "";
+          modal.style.display='none'
+          return registration.sync.register('add-new-review');
+        })
+        // .then((result) => {
+        //   console.log(result);
+        // })
+        .then(() => {
+           displayNewReview(newReview);
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+
+      });
+    }
+  }).catch((err) => {
+    console.error(err); 
+  });
+
 });
+
 
 /**
  * Initialize leaflet map
@@ -53,6 +101,20 @@ fetchRestaurantFromURL = async () => {
 }
 
 /**
+ * Get current restaurant from page URL.
+ */
+fetchReviewsFromURL = async () => {
+  try {
+    const id = getParameterByName('id');
+    if(!id) throw 'No restaurant id in URL'; // no id found in URL
+    const reviews = await DBHelper.fetchReviewsByRestaurant(id);
+    fillReviewsHTML(reviews);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
@@ -72,13 +134,56 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+  const favoriteToggle = fillFavoriteToggleControl(restaurant.is_favorite);
+  cuisine.appendChild(favoriteToggle);
+  
 
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  // const favoriteToggle = document.getElementById('favorite-toggle');
+  // if(restaurant.is_favorite){
+  //   favoriteToggle.checked = favoriteToggle.value = restaurant.is_favorite;
+  // }
+  // else{
+  //   favoriteToggle.checked = favoriteToggle.value = false;
+  // }
+  
+  
   // fill reviews
-  fillReviewsHTML();
+  //fillReviewsHTML();
+}
+
+fillFavoriteToggleControl =  (isFavorite) => {
+  const span = document.createElement('span');
+  span.setAttribute('id', 'favoriteState');
+
+  const input = document.createElement('input');
+  input.setAttribute('type', 'checkbox');
+  input.setAttribute('id', 'favorite-toggle');
+
+  if(isFavorite != null){
+    input.checked = input.value = isFavorite;
+  }
+  else{
+    input.checked = input.value = false;
+  }
+  
+  input.onclick = toggleFavoriteState;
+
+  const label = document.createElement('label');
+  label.setAttribute('for', 'favorite-toggle');
+
+  const i = document.createElement('i');
+   i.className = "fas fa-heart";
+   label.appendChild(i);
+
+   span.appendChild(input);
+   span.appendChild(label);
+   return span;
+
 }
 
  /**
@@ -116,11 +221,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  // const title = document.createElement('h3');
+  // title.innerHTML = 'Reviews';
+  // container.appendChild(title);
+
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -185,3 +291,27 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+displayNewReview = (newReview) => {
+  const firstReview = document.querySelector('#reviews-list article');
+  const parentDiv = firstReview.parentNode;
+  const newReviewHTML = createReviewHTML(newReview);
+  parentDiv.insertBefore(newReviewHTML, firstReview);
+}
+
+/**
+ * 
+ */
+
+toggleFavoriteState = () => {
+  const favoriteToggle = document.getElementById('favorite-toggle');
+  const isFavorite = favoriteToggle.checked;
+  const restaurantId = getParameterByName('id');
+  DBHelper.updateFavoriteState(restaurantId, isFavorite).then(() => {
+    favoriteToggle.value = isFavorite;
+
+  })
+  .catch((error) => console.error(error));
+  // console.log(isFavorite, favoriteToggle.value);
+}
+          

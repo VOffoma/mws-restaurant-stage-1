@@ -4,18 +4,48 @@ let restaurants,
 var newMap
 var markers = [];
 
+function notify(type, title, message){
+  VanillaToasts.create({
+    title: title,
+    text: message,
+    type: type,
+    timeout: 5000, // hide after 5000ms, // optional parameter
+  });
+ 
+}
 
+function isOnline () {
+  if (navigator.onLine){
+    console.log("online");
+    notify("info", "Connection Status", "You are currently online!");
+  } else {
+    console.log("offline");
+    notify("warning", "Connection Status", "You are currently offline.");
+    
+  }
+}
+
+document.addEventListener('readystatechange', event => {
+   if (event.target.readyState === 'complete') {
+    window.addEventListener('online', isOnline);
+    window.addEventListener('offline', isOnline);
+    isOnline();
+  }
+});
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', async (event) => {
+  
   initMap(); // added 
   registerServiceWorker();
   fetchNeighborhoods();
   fetchCuisines();
-  
+
 });
+
+
 
 
 
@@ -24,7 +54,6 @@ document.addEventListener('DOMContentLoaded', async (event) => {
  */
 registerServiceWorker = () => {
   if(!navigator.serviceWorker) return;
-  //navigator.serviceWorker.register(`/${repo}/sw.js`)
   navigator.serviceWorker.register(`sw.js`)
     .then(() => console.log('Registration worked'))
     .catch((error) => console.log(error));
@@ -198,6 +227,8 @@ createRestaurantHTML = (restaurant) => {
 }
 
 
+
+
  /**
    * get srcset and sizes for responsive images
    */
@@ -224,6 +255,6 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 
-} 
+ } 
 
 

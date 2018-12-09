@@ -206,8 +206,8 @@ nav h1 a {
 
 .inside #reviews-container{
   order:2;
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex;
+  flex-wrap: wrap; */
 }
 
 .inside #map-container{
@@ -325,3 +325,218 @@ nav h1 a {
 #restaurant-hours td {
   color: #666;
 } 
+
+#reviews-container textarea, #reviews-container input[type=text], #reviews-container select{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#write-review {
+    background-color: #f58500;
+    color: white;
+    padding: 14px 75px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    height: 50px;
+}
+
+#reviews-container form span {
+  font-size: 14px;
+}
+
+#reviews-container form span.checked {
+  color: #f58500;
+}
+
+
+ #favoriteState input[type=checkbox] {
+  visibility: hidden;
+}
+
+
+/**
+ * Create the pill to click
+ */
+ #favoriteState label {
+   font-size: 30px;
+   color: white;
+}
+
+/**
+* Create the checkbox event for the label
+*/
+#favoriteState input[type=checkbox]:checked + label {
+  /* left: 100px;
+  background: #f58500; */
+  color: #f58500;
+}
+
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+#reviewForm input[type="text"],
+#reviewForm textarea,
+#reviewForm button[type="submit"] {
+  font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif;
+}
+
+#reviewForm {
+  background: #F9F9F9;
+  padding: 25px;
+  margin: 50px 0;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+#reviewForm h3 {
+  display: block;
+  font-size: 30px;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+#reviewForm h4 {
+  margin: 5px 0 15px;
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+fieldset {
+  border: medium none !important;
+  margin: 0 0 10px;
+  min-width: 100%;
+  padding: 0;
+  width: 100%;
+}
+
+#reviewForm input[type="text"],
+#reviewForm textarea, #reviewForm select {
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #FFF;
+  margin: 0 0 5px;
+  padding: 10px;
+}
+
+#reviewForm input[type="text"]:hover,
+#reviewForm textarea:hover,
+#reviewForm select:hover,
+ {
+  -webkit-transition: border-color 0.3s ease-in-out;
+  -moz-transition: border-color 0.3s ease-in-out;
+  transition: border-color 0.3s ease-in-out;
+  border: 1px solid #aaa;
+}
+
+#reviewForm textarea {
+  height: 100px;
+  max-width: 100%;
+  resize: none;
+}
+
+#reviewForm select {
+  height: 50px;
+  max-width: 100%;
+  resize: none;
+}
+
+#reviewForm button[type="submit"] {
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  background: #f58500;
+  color: #FFF;
+  margin: 0 0 5px;
+  padding: 10px;
+  font-size: 15px;
+}
+
+#reviewForm button[type="submit"]:hover {
+  background: #f58500;
+  -webkit-transition: background 0.3s ease-in-out;
+  -moz-transition: background 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+}
+
+#reviewForm button[type="submit"]:active {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.copyright {
+  text-align: center;
+}
+
+#reviewForm input:focus,
+#reviewForm textarea:focus {
+  outline: 0;
+  border: 1px solid #aaa;
+}
+
+::-webkit-input-placeholder {
+  color: #888;
+}
+
+:-moz-placeholder {
+  color: #888;
+}
+
+::-moz-placeholder {
+  color: #888;
+}
+
+:-ms-input-placeholder {
+  color: #888;
+}
+
+/** https://www.w3schools.com/howto/howto_css_modals.asp */
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  /* background-color: #fefefe; */
+  margin: auto;
+  padding: 20px;
+  /* border: 1px solid #888; */
+  width: 60%;
+}
+
+/* The Close Button */
+.close {
+  color: #fff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}

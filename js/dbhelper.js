@@ -17,7 +17,38 @@ class DBHelper {
    */
   static async fetchRestaurants() {
     try{
-      const response = await fetch(`${DBHelper.SERVER_URL}/restaurants`);
+      const response = await fetch(`${DBHelper.SERVER_URL}/restaurants/`);
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    }
+    catch(error) {
+        const errorMessage = (`Request failed. Returned status of ${error.status}`);
+        return errorMessage;
+    }
+  }
+
+  /**
+   * Fetch all restaurants.
+   */
+  static async updateFavoriteState(restaurantId, isFavorite) {
+    try{   
+      const url = `${DBHelper.SERVER_URL}/restaurants/${restaurantId}/?is_favorite=${isFavorite}`;
+      const response = await fetch(url, {method: 'PUT'});
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    }
+    catch(error) {
+        const errorMessage = (`Request failed. Returned status of ${error.status}`);
+        return errorMessage;
+    }
+  }
+
+   /**
+   * Fetch all restaurants.
+   */
+  static async fetchReviewsByRestaurant(restaurantId) {
+    try{
+      const response = await fetch(`${DBHelper.SERVER_URL}/reviews/?restaurant_id=${restaurantId}`);
       const jsonResponse = await response.json();
       return jsonResponse;
     }
@@ -168,5 +199,8 @@ class DBHelper {
     return marker;
   } */
 
+
 }
+
+
 

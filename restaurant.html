@@ -11,6 +11,7 @@
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
   <title>Restaurant Info</title>
 </head>
@@ -50,13 +51,18 @@
           <p id="restaurant-address"></p>
           <table id="restaurant-hours"></table>
       </div>
+      <button id="write-review" onclick="document.getElementById('myModal').style.display='block'">Write Review</button>
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <h2 class="offcontent">Restaurant Reviews</h2>
       <!-- <ul id="reviews-list"></ul> -->
-      <div id="reviews-list"></div>
+      <h3>Reviews</h3>
+     
+      <div id="reviews-list">
+       
+      </div>
     </section>
     <!-- End reviews -->
   </main>
@@ -65,6 +71,43 @@
   <!-- Beginning footer -->
   <footer id="footer">Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.</footer>
   <!-- End footer -->
+ <!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+      <div class="container">  
+    <form id="reviewForm" action="" method="post">
+      <h3>Tell us what you think</h3>
+      <h4>Please drop a review about this restaurant</h4>
+      <fieldset>
+        <input id="reviewer" placeholder="Your name" type="text" tabindex="1" required autofocus>
+      </fieldset>
+      <fieldset>
+        <textarea id="comment" placeholder="Type your message here...." tabindex="5" required></textarea>
+      </fieldset>
+      <fieldset>
+        <select id="rating" name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+      </fieldset>
+      <fieldset>
+        <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button>
+      </fieldset>
+      <p class="copyright">Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a></p>
+    </form>
+  </div>
+
+  </div>
+
+</div>
+
   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
   <!-- Beginning scripts -->
   <script type="application/javascript" charset="utf-8" src="js/constants.js"></script>
@@ -72,6 +115,9 @@
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- indexeddb store -->
+  <script type="application/javascript" charset="utf-8" src="lib/idb.js"></script>
+  <script type="text/javascript" src="js/restaurantStore.js"></script>
   <!-- Google Maps -->
  <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
   <!-- End scripts -->

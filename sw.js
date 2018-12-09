@@ -2,6 +2,9 @@ if (typeof idb === "undefined") {
     self.importScripts('lib/idb.js');
 }
 
+self.importScripts('js/restaurantStore.js');
+
+
 
 const filesToCache = [
     './',
@@ -51,11 +54,20 @@ self.addEventListener('activate', (event) => {
             })
             );
         })
-        .then(() => createDatabase())
+        // .then(() => createDatabase())
+        .then(() => restaurantStore.init())
         .then(() => self.clients.claim())
     )
 });
 
+
+self.addEventListener('sync', (event) => {
+   
+    if (event.tag === 'add-new-review') {
+      console.log('sync event has been triggered');
+      event.waitUntil(postReview());
+    }
+  });
 
 self.addEventListener('fetch', (event) => {
     // Use a cache-first strategy
@@ -66,25 +78,14 @@ self.addEventListener('fetch', (event) => {
     // );
   
         // Use a network-first strategy
-        if(event.request.url == "http://localhost:1337/restaurants"){
-            event.respondWith(
-                fetch(event.request)
-                .then(async (response) => {
-                    const responseCopy = response.clone();
-                    const restaurants = await responseCopy.json();
-                    await addRestaurantsToIDB(restaurants);
-                    return response;
-                })
-                .catch(async () => {
-                    const restaurants = await fetchRestaurantsFromIDB();
-                    const blob = new Blob([JSON.stringify(restaurants, null, 2)], {type : 'application/json'});
-                    const init = { "status" : 200 , "statusText" : "success" };
-                    return new Response(blob, init);
-
-                    //https://stackoverflow.com/questions/44037816/converting-a-json-object-into-a-response-object
-                })
-                .catch((error) => console.log(error))
-            );
+        if(event.request.url.startsWith("http://localhost:1337")){
+            if(event.request.method == "GET"){
+                handleGetRequestsToAPIServer(event);
+            }
+            else{
+                fetch(event.request);
+            }
+            
         }
         else{
             event.respondWith(
@@ -107,35 +108,78 @@ const fetchFromCache = (event) => {
     return caches.match(event.request).then(response => response); 
 }
 
-const createDatabase = () => {
-    idb.open('restaurant-data', 1, (upgradeDb) => {
-        const restaurantListStore = upgradeDb.createObjectStore('restaurantList', {
-            keyPath: 'id',
-        });
-        restaurantListStore.createIndex('id', 'id');
-    });
+
+const postReview = async () => {
+    const reviews = await restaurantStore.retrieveRecords('unSavedReviews');
+    console.log('from idb:', reviews);
+    const postReviewUrl = 'http://localhost:1337/reviews/';
+    return Promise.all(reviews.map((review) => {
+        const tempReviewId = review.review_id;
+        delete review.review_id;
+        return fetch(postReviewUrl, {
+            method: 'POST',
+            body: JSON.stringify(review),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then(function(response) {
+            console.log('response', response);
+            return response.json();
+          }).then( async function(savedReview){
+            await restaurantStore.deleteRecord('unSavedReviews', tempReviewId);
+            await restaurantStore.saveRecords('reviews', savedReview);
+          })
+          .catch((err) => console.error(err))
+    }))
+    
+  
 }
 
-const addRestaurantsToIDB = async (restaurants) => {
-    let db = await idb.open('restaurant-data', 1);
-    const tx = db.transaction('restaurantList', 'readwrite');
-    const store = tx.objectStore('restaurantList');
+const handleGetRequestsToAPIServer = (event) => {
+    const url = new URL(event.request.url);
+    const recordStoreName = url.pathname.substring(1, url.pathname.length -1);
 
-    for(let i in restaurants){
-        await store.put(restaurants[i]);
+    event.respondWith(
+        fetch(event.request)
+        .then(async (response) => {
+            const responseCopy = response.clone();
+            const records = await responseCopy.json();
+            await restaurantStore.saveRecords(recordStoreName, records);
+            return response;
+        })
+        .catch(async () => {
+            //const restaurants = await fetchRestaurantsFromIDB();
+            let records = await getRecords(recordStoreName, url);
+            const blob = new Blob([JSON.stringify(records, null, 2)], {type : 'application/json'});
+            const init = { "status" : 200 , "statusText" : "success" };
+            return new Response(blob, init);
+
+            //https://stackoverflow.com/questions/44037816/converting-a-json-object-into-a-response-object
+        })
+        .catch((error) => console.log(error))
+    );
+}
+
+getRecords = async (storeName, urlObject) => {
+    if(storeName == 'reviews'){
+        let records = await restaurantStore.retrieveRecords(storeName);
+        let unSavedRecords = await restaurantStore.retrieveRecords('unSavedReviews');
+        let allRecords = [...unSavedRecords, ...records];
+
+        if(urlObject.search != ""){
+            let params = new URLSearchParams(urlObject.search.substring(1));
+            const restaurantId = parseInt(params.get("restaurant_id"));
+            allRecords = restaurantStore.findRecords(allRecords, 'restaurant_id', restaurantId);
+            return allRecords;
+        }
+        return allRecords;
     }
-    return tx.complete;
+    else {
+        let records = await restaurantStore.retrieveRecords(storeName);
+        return records;
+    }
 }
 
 
-const fetchRestaurantsFromIDB = async () => {
-    let db = await idb.open('restaurant-data', 1);
-    const tx = db.transaction('restaurantList');
-    const store = tx.objectStore('restaurantList');
-
-    let restaurants = await store.getAll();
-    db.close();
-    return restaurants;
-}
 
 
