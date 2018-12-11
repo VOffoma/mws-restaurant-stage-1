@@ -1,6 +1,34 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      options: {
+        mangle: false
+      },
+      target: {
+        options: {
+          sourceMap: true,
+          sourceMapName: 'path/to/sourcemap.map'
+        },
+        files:{
+          'js/dbhelper.min.js': 'js/dbhelper.js',
+          'js/main.min.js': 'js/main.js',
+          'js/restaurant_info.min.js': 'js/restaurant_info.js'
+        }
+      }
+    },
+    cssmin: {
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'css/',
+          src: ['*.css', '!*.min.css'],
+          dest: 'css/',
+          ext: '.min.css'
+        }]
+      }
+    },
     responsive_images: {
       dev: {
         options: {
@@ -68,6 +96,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images']);
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-uglify-es');
+  grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images', 'cssmin', 'uglify']);
 
 };

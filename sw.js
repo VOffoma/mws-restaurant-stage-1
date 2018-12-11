@@ -10,12 +10,12 @@ const filesToCache = [
     './',
     './index.html',
     './restaurant.html',
-    './css/styles.css',
-    './css/responsive.css',
+    './css/styles.min.css',
+    './css/responsive.min.css',
     './js/constants.js',
-    './js/dbhelper.js',
-    './js/main.js',
-    './js/restaurant_info.js'
+    './js/dbhelper.min.js',
+    './js/main.min.js',
+    './js/restaurant_info.min.js',
 ];
 
 const staticCache = 'restaurant-static-cache';
@@ -74,7 +74,7 @@ self.addEventListener('fetch', (event) => {
     // event.respondWith(
     //     fetchFromCache(event)
     //       .catch(() => fetch(event.request))
-    //      .then(response => addToCache(staticCacheName, event.request, response))
+    //      .then(response => addToCache(staticCache, event.request, response))
     // );
   
         // Use a network-first strategy
@@ -90,7 +90,7 @@ self.addEventListener('fetch', (event) => {
         else{
             event.respondWith(
                 fetch(event.request)
-                .then(response => addToCache(dynamicCache, event.request, response))
+                .then(response => addToCache(staticCache, event.request, response))
                 .catch(() => fetchFromCache(event))
             );
         }

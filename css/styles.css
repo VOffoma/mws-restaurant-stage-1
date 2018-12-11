@@ -373,11 +373,14 @@ nav h1 a {
 /**
 * Create the checkbox event for the label
 */
-#favoriteState input[type=checkbox]:checked + label {
-  /* left: 100px;
-  background: #f58500; */
+#favoriteState label.checked{
   color: #f58500;
 }
+ #favoriteState input[type=checkbox]:checked + label {
+  /* left: 100px;
+  background: #f58500; */
+  /* color: #f58500; */
+} 
 
 
 .container {
